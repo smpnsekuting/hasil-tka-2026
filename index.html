@@ -106,14 +106,6 @@ button:hover{
     }
 }
 
-.foto{
-    width:170px;
-    height:220px;
-    object-fit:cover;
-    border-radius:15px;
-    border:4px solid #2563eb;
-}
-
 .data{
     margin-top:20px;
 }
@@ -200,12 +192,8 @@ SMP NEGERI SEKUTING TERPADU
 </p>
 
 <div class="input-group">
-<input type="text"
-       id="nisn"
-       placeholder="Masukkan NISN">
-<button onclick="cariData()">
-CEK NILAI
-</button>
+<input type="text" id="nisn" placeholder="Masukkan NISN">
+<button onclick="cariData()">CEK NILAI</button>
 </div>
 
 <div id="hasil"></div>
@@ -270,20 +258,11 @@ function cariData(){
 
         <div class="siswa">
 
-            <center>
-                <img class="foto"
-                     src="${siswa.foto}"
-                     onerror="this.src='assets/no-photo.png'">
-            </center>
-
             <div class="data">
 
                 <p><b>Nama :</b> ${siswa.nama}</p>
-
                 <p><b>NISN :</b> ${siswa.nisn}</p>
-
                 <p><b>No Peserta :</b> ${siswa.nomor_peserta}</p>
-
                 <p><b>Tempat Tanggal Lahir :</b> ${siswa.ttl}</p>
 
             </div>
@@ -291,19 +270,13 @@ function cariData(){
             <div class="nilai-wrapper">
 
                 <div class="nilai-box mtk">
-
                     <h3>MATEMATIKA</h3>
-
                     ${formatNilai(siswa.matematika)}
-
                 </div>
 
                 <div class="nilai-box bindo">
-
                     <h3>BAHASA INDONESIA</h3>
-
                     ${formatNilai(siswa.bahasa)}
-
                 </div>
 
             </div>
