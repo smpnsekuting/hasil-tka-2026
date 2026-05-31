@@ -1,45 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hasil Nilai TKA 2026</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Segoe UI',sans-serif;
+    min-height:100vh;
+    background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+    padding:20px;
+}
+
+.container{
+    max-width:850px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 15px 40px rgba(0,0,0,.2);
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:15px;
+}
+
+.logo img{
+    width:90px;
+}
+
+h1{
+    text-align:center;
+    color:#1e3a8a;
+    margin-bottom:5px;
+}
+
+.subjudul{
+    text-align:center;
+    color:#666;
+    margin-bottom:25px;
+}
+
+.input-group{
+    display:flex;
+    gap:10px;
+}
+
+input{
+    flex:1;
+    padding:14px;
+    border:2px solid #ddd;
+    border-radius:10px;
+    font-size:16px;
+}
+
+input:focus{
+    outline:none;
+    border-color:#2563eb;
+}
+
+button{
+    padding:14px 25px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+#hasil{
+    margin-top:25px;
+}
+
+.siswa{
+    animation:muncul .4s ease;
+}
+
+@keyframes muncul{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.foto{
+    width:170px;
+    height:220px;
+    object-fit:cover;
+    border-radius:15px;
+    border:4px solid #2563eb;
+}
+
+.data{
+    margin-top:20px;
+}
+
+.data p{
+    margin:8px 0;
+    font-size:16px;
+}
+
+.nilai-wrapper{
+    display:flex;
+    gap:20px;
+    margin-top:25px;
+}
+
+.nilai-box{
+    flex:1;
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
+    color:white;
+}
+
+.mtk{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+}
+
+.bindo{
+    background:linear-gradient(135deg,#16a34a,#15803d);
+}
+
+.nilai-angka{
+    font-size:40px;
+    font-weight:bold;
+}
+
+.nilai-predikat{
+    margin-top:8px;
+    font-size:18px;
+}
+
+.error{
+    text-align:center;
+    color:red;
+    font-weight:bold;
+    margin-top:20px;
+}
+
+.footer{
+    text-align:center;
+    margin-top:25px;
+    color:#666;
+    font-size:13px;
+}
+
+@media(max-width:700px){
+
+    .input-group{
+        flex-direction:column;
+    }
+
+    .nilai-wrapper{
+        flex-direction:column;
+    }
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<div class="logo">
+<img src="logo.png" onerror="this.style.display='none'">
+</div>
+
+<h1>HASIL NILAI TKA 2026</h1>
+
+<p class="subjudul">
+SMPN Sekuting Terpadu
+</p>
+
+<div class="input-group">
+<input type="text"
+       id="nisn"
+       placeholder="Masukkan NISN">
+<button onclick="cariData()">
+CEK NILAI
+</button>
+</div>
+
+<div id="hasil"></div>
+
+<div class="footer">
+© SMPN Sekuting Terpadu
+</div>
+
+</div>
+</div>
+
+<script>
+
+let database=[];
+
+fetch('data.json')
+.then(res=>res.json())
+.then(data=>{
+    database=data;
+})
+.catch(err=>{
+    console.log(err);
+});
+
+function formatNilai(dataNilai){
+
+    if(!dataNilai) return '';
+
+    let bagian=dataNilai.split('<br>');
+
+    return `
+        <div class="nilai-angka">${bagian[0]}</div>
+        <div class="nilai-predikat">
+            ${bagian[1] || ''}
+        </div>
+    `;
+}
+
 function cariData(){
 
-    const nisn = document
+    const nisn=document
         .getElementById("nisn")
         .value
         .trim()
         .replace(/^0+/,'');
 
-    const siswa = database.find(
-        s => s.nisn.toString().replace(/^0+/,'') === nisn
+    const siswa=database.find(
+        s=>s.nisn.toString().replace(/^0+/,'')===nisn
     );
 
     if(!siswa){
 
-        document.getElementById("hasil").innerHTML = `
-        <div style="
-            background:#fee2e2;
-            color:#b91c1c;
-            padding:15px;
-            border-radius:10px;
-            text-align:center;
-            font-weight:bold;
-        ">
-            Data tidak ditemukan
-        </div>`;
-
+        document.getElementById("hasil").innerHTML=`
+            <div class="error">
+                Data tidak ditemukan
+            </div>
+        `;
         return;
     }
 
-    document.getElementById("hasil").innerHTML = `
+    document.getElementById("hasil").innerHTML=`
 
-    <div class="card-hasil">
+        <div class="siswa">
 
-        <div class="profil">
+            <center>
+                <img class="foto"
+                     src="${siswa.foto}"
+                     onerror="this.src='assets/no-photo.png'">
+            </center>
 
-            <img class="foto"
-                 src="${siswa.foto}"
-                 onerror="this.src='assets/no-photo.png'">
+            <div class="data">
 
-            <div class="identitas">
-
-                <h2>${siswa.nama}</h2>
+                <p><b>Nama :</b> ${siswa.nama}</p>
 
                 <p><b>NISN :</b> ${siswa.nisn}</p>
 
@@ -49,8 +288,39 @@ function cariData(){
 
             </div>
 
+            <div class="nilai-wrapper">
+
+                <div class="nilai-box mtk">
+
+                    <h3>MATEMATIKA</h3>
+
+                    ${formatNilai(siswa.matematika)}
+
+                </div>
+
+                <div class="nilai-box bindo">
+
+                    <h3>BAHASA INDONESIA</h3>
+
+                    ${formatNilai(siswa.bahasa)}
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="nilai-container">
+    `;
+}
 
-            <div class="nilai-box
+document.getElementById("nisn")
+.addEventListener("keypress",function(e){
+    if(e.key==="Enter"){
+        cariData();
+    }
+});
+
+</script>
+
+</body>
+</html>
