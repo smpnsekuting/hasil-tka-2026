@@ -1,1 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pengumuman Hasil TKA SMP Negeri Sekuting Terpadu</title>
 
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    margin:0;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+.search-box{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+input{
+    width:300px;
+    padding:12px;
+    font-size:16px;
+}
+
+button{
+    padding:12px 20px;
+    background:#0d6efd;
+    color:white;
+    border:none;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+button:hover{
+    background:#0b5ed7;
+}
+
+.card{
+    margin-top:20px;
+    background:white;
+    border-radius:10px;
+    padding:20px;
+    display:none;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+.top{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.photo{
+    width:180px;
+    height:220px;
+    object-fit:cover;
+    border:1px solid #ccc;
+}
+
+.info{
+    flex:1;
+}
+
+.label{
+    color:#666;
+    font-size:13px;
+    margin-top:10px;
+}
+
+.value{
+    font-weight:bold;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+th,td{
+    border:1px solid #000;
+    text-align:center;
+    padding:15px;
+}
+
+.nilai{
+    font-size:24px;
+    font-weight:bold;
+}
+
+.predikat{
+    font-size:18px;
+}
+
+.error{
+    color:red;
+    margin-top:15px;
+}
+
+@media(max-width:700px){
+    .top{
+        flex-direction:column;
+    }
+
+    .photo{
+        width:100%;
+        height:auto;
+    }
+
+    input{
+        width:100%;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="search-box">
+    <h2>PENGUMUMAN HASIL TKA</h2>
+    <h3>SMP NEGERI SEKUTING TERPADU</h3>
+
+    <input type="text" id="nisn" placeholder="Masukkan NISN">
+    <button onclick="cari()">Lihat Hasil</button>
+
+    <div id="error" class="error"></div>
+</div>
+
+<div class="card" id="hasil">
+
+    <div class="top">
+
+        <img id="foto" class="photo" src="">
+
+        <div class="info">
+
+            <div class="label">NAMA SISWA</div>
+            <div class="value" id="nama"></div>
+
+            <div class="label">NISN</div>
+            <div class="value" id="nisn_view"></div>
+
+            <div class="label">NOMOR PESERTA</div>
+            <div class="value" id="peserta"></div>
+
+            <div class="label">TEMPAT/TANGGAL LAHIR</div>
+            <div class="value" id="ttl"></div>
+
+        </div>
+
+    </div>
+
+    <table>
+        <tr>
+            <th>Matematika</th>
+            <th>Bahasa Indonesia</th>
+        </tr>
+
+        <tr>
+
+            <td>
+                <div class="nilai" id="mtk"></div>
+                <div class="predikat" id="pred_mtk"></div>
+            </td>
+
+            <td>
+                <div class="nilai" id="bindo"></div>
+                <div class="predikat" id="pred_bindo"></div>
+            </td>
+
+        </tr>
+    </table>
+
+</div>
+
+</div>
+
+<script>
+
+let data=[];
+
+fetch("data.json")
+.then(res=>res.json())
+.then(json=>{
+    data=json;
+});
+
+function predikat(nilai){
+
+    nilai=parseFloat(nilai);
+
+    if(nilai>=90) return "Sangat Baik";
+    if(nilai>=80) return "Baik Sekali";
+    if(nilai>=70) return "Baik";
+    if(nilai>=60) return "Memadai";
+
+    return "Perlu Pembinaan";
+}
+
+function cari(){
+
+    let nisn=document.getElementById("nisn").value.trim();
+
+    let siswa=data.find(x=>String(x.nisn)===nisn);
+
+    if(!siswa){
+
+        document.getElementById("hasil").style.display="none";
+
+        document.getElementById("error").innerHTML=
+        "NISN tidak ditemukan";
+
+        return;
+    }
+
+    document.getElementById("error").innerHTML="";
+    document.getElementById("hasil").style.display="block";
+
+    document.getElementById("nama").innerHTML=siswa.nama;
+    document.getElementById("nisn_view").innerHTML=siswa.nisn;
+    document.getElementById("peserta").innerHTML=siswa.nomor_peserta;
+    document.getElementById("ttl").innerHTML=siswa.ttl;
+
+    document.getElementById("mtk").innerHTML=siswa.matematika;
+    document.getElementById("bindo").innerHTML=siswa.bahasa;
+
+    document.getElementById("pred_mtk").innerHTML=
+    "(" + predikat(siswa.matematika) + ")";
+
+    document.getElementById("pred_bindo").innerHTML=
+    "(" + predikat(siswa.bahasa) + ")";
+
+    document.getElementById("foto").src=
+    "assets/" + siswa.nisn + ".jpg";
+}
+</script>
+
+</body>
+</html>
